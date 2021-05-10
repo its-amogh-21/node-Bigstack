@@ -57,7 +57,26 @@ router.post("/login", (req, res)=>{
             bcrypt.compare(password, person.password)
                 .then(isCorrect => {
                     if (isCorrect){
-                        res.json({success: "User logged in"})
+                        // res.json({success: "User logged in"})
+
+                        //Use payload and create token for user
+                        const payload ={
+                            id: person.id,
+                            name: person.name,
+                            email: person.email
+                        };
+                        jwt.sign(
+                            payload,
+                            key.secret,
+                            {expiresIn: 3600},
+                            (err, token) => {
+                                res.json({
+                                    success: true,
+                                    token: "Bearer" + token
+                                });
+                            }
+
+                        )
                     }
                     else{
                         res.status(400).json({passwordError: "Incorrect Password"})
