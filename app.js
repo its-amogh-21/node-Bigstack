@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config()
-const bodyparser = require('body-parser')
+const bodyparser = require('body-parser');
+const passport = require('passport')
 
 const app = express();
 
@@ -30,6 +31,11 @@ mongoose.connect(db, {
   console.log(err)
 })
 
+//Passport middleware
+app.use(passport.initialize());
+
+//Config for JWT strategy
+require('./Strategies/jwtStrat')(passport);
 
 // Test route
 app.get('/', (req, res) => {

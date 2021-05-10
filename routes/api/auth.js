@@ -72,7 +72,7 @@ router.post("/login", (req, res)=>{
                             (err, token) => {
                                 res.json({
                                     success: true,
-                                    token: "Bearer" + token
+                                    token: "Bearer " + token
                                 });
                             }
 
@@ -87,6 +87,18 @@ router.post("/login", (req, res)=>{
         .catch(err => console.log(err));
 
 
+})
+
+//Route to user profile, Private Access, Type: Get, /api/auth/profile
+router.get('/profile', passport.authenticate('jwt', {session: false}),
+    (req, res)=> {
+    // console.log(req);
+    res.json({
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email,
+        profilePic: req.user.profilePic
+    })
 })
 
 module.exports = router;
