@@ -23,8 +23,17 @@ router.post('/register', (req, res)=> {
                 const newPerson = new Person({
                     name: req.body.name,
                     email: req.body.email,
-                    password: req.body.password
+                    password: req.body.password,
+                    gender: req.body.gender,
+                    profilePic: req.body.profilePic
                 });
+
+                if (newPerson.gender === "male"){
+                    newPerson.profilePic = "male.jpg"
+                }
+                if (newPerson.gender === "female"){
+                    newPerson.profilePic = "female.jpg"
+                }
                 //Encrypting password using bcrypt
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(newPerson.password, salt, (err, hash) => {

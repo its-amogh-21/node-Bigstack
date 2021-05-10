@@ -18,13 +18,17 @@ const PersonSchema = new Schema({
     username: {
         type: String,
     },
-    profilePic: {
+    profilePic:{
         type: String,
-        default: 'https://www.pexels.com/photo/man-in-black-jacket-771742/'
+
     },
     date: {
         type: Date,
         default: Date.now
+    },
+    gender: {
+        type: String,
+        required: true
     }
 });
 
