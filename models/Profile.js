@@ -53,7 +53,7 @@ const ProfileSchema = new Schema({
         }
     ],
 
-    Social: {
+    social: {
         youtube: {
             type: String
         },
@@ -63,6 +63,10 @@ const ProfileSchema = new Schema({
         instagram: {
             type: String
         }
+    },
+    date: {
+        type: Date,
+        default: Date.now()
     }
 });
 
