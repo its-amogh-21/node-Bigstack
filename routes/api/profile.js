@@ -28,9 +28,9 @@ router.post( '/', passport.authenticate('jwt', {session: false}), (req, res)=>{
     const profileValue = {}
     profileValue.user = req.user.id;
     if (req.body.username) profileValue.username = req.body.username
-    if (req.body.website) profileValue.username = req.body.website
-    if (req.body.country) profileValue.username = req.body.country
-    if (req.body.portfolio) profileValue.username = req.body.portfolio
+    if (req.body.website) profileValue.website = req.body.website
+    if (req.body.country) profileValue.country = req.body.country
+    if (req.body.portfolio) profileValue.portfolio = req.body.portfolio
     if (typeof (req.body.languages) != undefined){
         profileValue.languages = req.body.languages.split(',');
     }
@@ -68,6 +68,52 @@ router.post( '/', passport.authenticate('jwt', {session: false}), (req, res)=>{
             }
         })
         .catch(err => console.log("Problem in fetching profile ", err))
+})
+
+// Route for getting user profile based on USERNAME, Public Access, Type: GET, /api/profile/:username
+// router.get('/:username', (req, res)=>{
+//     Profile.findOne({username: req.params.username})
+//         .populate('user', ['name', 'profilePic', 'gender'])
+//         .then(
+//             profile => {
+//                 if(!profile){
+//                     res.status(404).json({userNameNotFound: "Username not found"})
+//                 }
+//                 res.json(profile);
+//             }
+//         )
+//         .catch(err => console.log("Error in fetching Username ", err))
+// })
+
+//Route for getting user profile based on ID, Public Access, Type: GET, /api/profile/:id
+router.get('/:_id', (req, res)=>{
+    Profile.findOne({id: req.params.id})
+        .populate('user', ['name', 'gender', 'profilePic'])
+        .then(
+            profile => {
+                if(!profile){
+                    res.status(404).json({idNotFound: "Id not found"})
+                }
+                res.json(profile)
+            }
+        )
+        .catch(err => console.log("Error in fetching id ", err))
+})
+
+//Route for getting user profile of everyone, Public Access, Type: GET, /api/profile/find/everyone
+router.get('/find/everyone',(req, res)=>{
+    Profile.find()
+        .populate('user', ['name', 'profilePic', 'gender'])
+        .then(
+            profile => {
+                if(!profile){
+                    res.status(404).json({noProfile: "No Profile Found"})
+                }
+                res.json(profile)
+                console.log("No. of profile found are: ", profile.length)
+            }
+        )
+        .catch(err => console.log("Problem in getting profiles ", err))
 })
 
 module.exports = router;
