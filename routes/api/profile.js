@@ -131,4 +131,55 @@ router.delete('/', passport.authenticate('jwt', {session: false}), (req, res)=>{
         .catch(err => console.log(err))
 })
 
+//Route for adding workrole, Private Access, Type: POST, /api/profile/workrole
+router.post('/workrole', passport.authenticate('jwt', {session: false}), (req, res)=>{
+    Profile.findOne({user: req.user.id})
+        .then(
+            profile => {
+                if (!profile){
+                    res.status(404).json({noProfile: "No profile Found"})
+                }
+                const newWork = {
+                    role: req.body.role,
+                    company: req.body.company,
+                    country: req.body.country,
+                    from : req.body.from,
+                    to: req.body.to,
+                    current: req.body.current,
+                    details: req.body.details,
+
+                };
+                profile.workrole.unshift(newWork);
+                profile.save()
+                    .then(
+                        res.json(profile => res.json(profile))
+                    )
+                    .catch(err => console.log("Unable to save data"))
+            }
+        )
+        .catch(err => console.log("Problem in adding the workrole", err))
+})
+
+//Route for deleting a specific workrole, Private Access, Type: DELETE, /api/profile/workrole/:w_id
+router.delete('/workrole/:w_id',  passport.authenticate('jwt', {session :false}), (req, res)=>{
+    Profile.findOne({user: req.user.id})
+        .then(
+            profile =>{
+                if(!profile){
+                    res.status(404).json({profileNotFound: "Profile Not found"})
+                }
+                const removethis = profile.workrole
+                    .map(item => item.id)
+                    .indexOf(req.params.w_id)
+
+                profile.workrole.splice(removethis, 1)
+
+                profile
+                    .save()
+                    .then(profile => res.json(profile))
+                    .catch(err=>console.log(err))
+            }
+        )
+        .catch(err => console.log("Unable to delete workrole ", err))
+})
 module.exports = router;
