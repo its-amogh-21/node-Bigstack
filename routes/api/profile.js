@@ -116,4 +116,19 @@ router.get('/find/everyone',(req, res)=>{
         .catch(err => console.log("Problem in getting profiles ", err))
 })
 
+//Route for deleting user using _id, Private Access, Type: DELETE, /api/profile/
+
+router.delete('/', passport.authenticate('jwt', {session: false}), (req, res)=>{
+    Profile.findOne({user: req.user.id});
+    Profile.findOneAndRemove({user: req.user.id})
+        .then(
+            Profile.findOneAndRemove({_id: req.user.id})
+                .then(
+                    res.json({success: "Profile Deleted Successfully"})
+                )
+                .catch(err => console.log(err))
+        )
+        .catch(err => console.log(err))
+})
+
 module.exports = router;
